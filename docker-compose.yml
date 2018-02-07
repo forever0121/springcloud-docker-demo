@@ -1,0 +1,28 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+  eureka-server:
+    image: test/eureka-server
+    ports:
+     - "8881:8881"
+  config-server:
+    image: test/config-server
+    ports:
+     - "8882:8882"
+    depends_on:
+     - eureka-server
+     - rabbitmq
+  config-client:
+    image: test/config-client
+    ports:
+     - "8883:8883"
+    depends_on:
+       - eureka-server
+       - config-server
+       - rabbitmq
